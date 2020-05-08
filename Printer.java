@@ -5,33 +5,55 @@ import java.awt.event.ActionListener;
 
 /*
    TO DO:
-    0) Make current in diffrent color ++
-    1) Add Diffrent sorting algroithms and make it work with diffrent algos
-    2) Add a Start to Menu
+    0) Make current in different color ++
+    1) Add Different sorting algorithms and make it work with different algos
+    1.5) Add something like chooser and work the chooser in other method. not in the Constructor
+    2) Add a Start to Menu ++
     3) Make a Menu to Choose algo
     4) Add speed chooser to menu to 0 to 1
-    5) Make this Menu preface like login screen
+    5) Make this Menu preface like login screen ++
+    6) Add restart After Sorting is finish
  */
 public class Printer extends JComponent implements ActionListener {
     private final int WIDTH = 1280;
     private final int HEIGHT = 720;
+    private int count = 0;
     private int[] data;
     private int cur;
-    private int count = 0;
-    JFrame mainFrame;
-    JButton button;
-
+    private JFrame mainFrame;
+    private JButton starter;
+    private JButton restart;
+    private JComboBox<String> algorithms;
     public Printer() {
+        //Set the items//////
+        algorithms = new JComboBox<>();
         mainFrame = new JFrame();
-        button = new JButton("Bas");
-        button.addActionListener(this);
-        button.setBounds(10, 100, 100, 100);
+        starter = new JButton("Start");
+        restart = new JButton("Restart");
+        restart.addActionListener(this);
+        starter.addActionListener(this);
+        starter.setBounds(10, 100, 100, 50);
+        algorithms.setBounds(10,40,100,50);
+        setOpaque(true);
+        mainFrame.setBackground(Color.GRAY);
+        ///////////////////////
+        // Add algorithms //
+        algorithms.addItem("Bubble Sort");
+        algorithms.addItem("Quicksort");
+        algorithms.addItem("Heapsort");
+        algorithms.addItem("Counting Sort");
+        algorithms.addItem("Insertion Sort");
+        algorithms.addItem("Merge Sort");
+        algorithms.addItem("Radix Sort");
+        ////////////////
         data = new int[WIDTH];
         randomize(data);
+        /////////Add items to Main Frame ////////
         mainFrame.setSize(WIDTH, HEIGHT);
         mainFrame.setTitle("Visual Sorting");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainFrame.add(button);
+        mainFrame.add(starter);
+        mainFrame.add(algorithms);
         mainFrame.add(this);
         mainFrame.setVisible(true);
        // bubbleSort(data);
@@ -47,6 +69,9 @@ public class Printer extends JComponent implements ActionListener {
                 g2.setColor(Color.ORANGE);
             else
                 g2.setColor(Color.GRAY);
+            if(count == 0){
+                g2.setColor(Color.WHITE);// starter screen will be look different
+            }
             g2.drawLine(i, HEIGHT, i, HEIGHT - data[i]);
         }
     }
@@ -58,6 +83,7 @@ public class Printer extends JComponent implements ActionListener {
             timeElapsed = System.nanoTime() - startTime;
         } while (timeElapsed < nanoseconds);
     }
+    private void startSorting(int alabilir,String olabilir){}
 
     private void bubbleSort(int[] arr) {
         int n = arr.length;
@@ -73,8 +99,10 @@ public class Printer extends JComponent implements ActionListener {
                 repaint();
                 delay(10000);
             }
-
         }
+        System.out.println("heyy");
+        mainFrame.add(restart);
+        restart.setVisible(true);
     }
 
     private void randomize(int[] arr) {
@@ -86,7 +114,11 @@ public class Printer extends JComponent implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        if(command.equals("Bas") && count == 0){
+        if(command.equals("Start") && count == 0){
+            restart.setVisible(false);
+            setOpaque(false);
+            starter.setVisible(false);// i dont want to see after i click
+            algorithms.setVisible(false);
             count++;
             new Thread(){
                 @Override
@@ -96,6 +128,13 @@ public class Printer extends JComponent implements ActionListener {
                 }
             }.start();
 
+        }
+        if(command.equals("Restart")){
+            starter.setVisible(true);
+            algorithms.setVisible(true);
+            restart.setVisible(false);
+            randomize(data);
+            repaint();
         }
     }
 }
