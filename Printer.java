@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /*
    TO DO:
@@ -10,17 +12,19 @@ import java.awt.*;
     4) Add speed chooser to menu to 0 to 1
     5) Make this Menu preface like login screen
  */
-public class Printer extends JComponent {
+public class Printer extends JComponent implements ActionListener {
     private final int WIDTH = 1280;
     private final int HEIGHT = 720;
     private int[] data;
     private int cur;
+    private int count = 0;
     JFrame mainFrame;
     JButton button;
 
     public Printer() {
         mainFrame = new JFrame();
         button = new JButton("Bas");
+        button.addActionListener(this);
         button.setBounds(10, 100, 100, 100);
         data = new int[WIDTH];
         randomize(data);
@@ -30,7 +34,7 @@ public class Printer extends JComponent {
         mainFrame.add(button);
         mainFrame.add(this);
         mainFrame.setVisible(true);
-        bubbleSort(data);
+       // bubbleSort(data);
     }
 
     @Override
@@ -76,6 +80,22 @@ public class Printer extends JComponent {
     private void randomize(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
             arr[i] = (int) (Math.random() * 720);
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String command = e.getActionCommand();
+        if(command.equals("Bas") && count == 0){
+            count++;
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    bubbleSort(data);
+                }
+            }.start();
+
         }
     }
 }
