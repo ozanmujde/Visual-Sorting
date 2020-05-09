@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 
 /*
    TO DO:
@@ -36,6 +35,7 @@ public class Printer extends JComponent implements ActionListener {
         starter.addActionListener(this);
         starter.setBounds(10, 100, 100, 50);
         algorithms.setBounds(10, 40, 100, 50);
+        restart.setBounds(540,300,100,60);
         setOpaque(true);
         mainFrame.setBackground(Color.GRAY);
         ///////////////////////
@@ -55,6 +55,8 @@ public class Printer extends JComponent implements ActionListener {
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.add(starter);
         mainFrame.add(algorithms);
+        mainFrame.add(restart);
+        restart.setVisible(false);
         mainFrame.add(this);
         mainFrame.setVisible(true);
         // bubbleSort(data);
@@ -64,13 +66,13 @@ public class Printer extends JComponent implements ActionListener {
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         super.paintComponent(g2);
-        g2.drawLine(1250, HEIGHT, 1250, HEIGHT - 500);
         for (int i = 0; i < data.length; i++) {
             if (cur == i)
                 g2.setColor(Color.ORANGE);
             else
                 g2.setColor(Color.GRAY);
             if (count == 0) {
+
                 g2.setColor(Color.WHITE);// starter screen will be look different
             }
             g2.drawLine(i, HEIGHT, i, HEIGHT - data[i]);
@@ -106,7 +108,8 @@ public class Printer extends JComponent implements ActionListener {
                 ;
                 break;
         }
-        mainFrame.add(restart);
+        cur = -1;//delete the current pointer
+        repaint();
         restart.setVisible(true);
     }
         /////////////////////BubbleSort//////////////
@@ -224,11 +227,10 @@ public class Printer extends JComponent implements ActionListener {
 
         }
         if (command.equals("Restart")) {
+            restart.setVisible(false);
             starter.setVisible(true);
             algorithms.setVisible(true);
-            restart.setVisible(false);
             mainFrame.remove(restart);
-            setOpaque(true);
             count = 0;
             randomize(data);
             repaint();
